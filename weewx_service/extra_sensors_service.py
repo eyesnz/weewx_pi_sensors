@@ -22,16 +22,8 @@ class ExtraSensorsService(StdService):
     def get_bmp180(self, event):
         sensor = BMP085.BMP085()
         mbarToinHg = 0.02952998751
-        
-        barometer = float(sensor.read_pressure()/100.0)
-        syslog.syslog(syslog.LOG_DEBUG, "extrasensors: found barometer value of %s mbar" % barometer)
-        event.record['barometer'] = float(barometer * mbarToinHg)
 
-        altimeter = int(sensor.read_altitude())
-        syslog.syslog(syslog.LOG_DEBUG, "extrasensors: found altimeter value of %s" % altimeter)
-        event.record['altimeter'] = altimeter
-
-        pressure = float(sensor.read_sealevel_pressure()/100.0)
+        pressure = float(sensor.read_pressure()/100.0)
         syslog.syslog(syslog.LOG_DEBUG, "extrasensors: found pressure value of %s mbar" % pressure)
         event.record['pressure'] = float(pressure * mbarToinHg)
 
