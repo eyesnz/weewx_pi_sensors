@@ -12,7 +12,9 @@ class ExtraSensorsService(StdService):
         # Read from config which pin to use on the RPI GPIO
         # Defaults to 22
         self.dht22_pin = d.get('dht22_pin', 22)
-        self.bind(weewx.NEW_ARCHIVE_RECORD, self.load_data)
+        # Use the loop packet event as that allows data to still get into the WeeWX database
+        # as well as supporting a OLED module on the RPI
+        self.bind(weewx.NEW_LOOP_PACKET, self.load_data)
     
     def load_data(self, event):
         try:
@@ -24,18 +26,19 @@ class ExtraSensorsService(StdService):
     # Get BMP180 data
     def get_bmp180(self, event):
         sensor = BMP085.BMP085()
-        mbarToinHg = 0.02952998751
 
         pressure = float(sensor.read_pressure()/100.0)
         syslog.syslog(syslog.LOG_DEBUG, "extrasensors: found pressure value of %s mbar" % pressure)
-        event.record['pressure'] = float(pressure * mbarToinHg)
+        # NOTE: stores as mbar
+        event.packet['pressure'] = float(pressure)
 
     # Get DHT22 data
     def get_dht22(self, event):
         humidity, temperature = dht.read_retry(dht.DHT22, self.dht22_pin)
         if humidity is not None:
-            syslog.syslog(syslog.LOG_DEBUG, "extrasensors: found humidity value of %s" % humidity)
-            event.record['inHumidity'] = float(humidity)
+            syslog.syslog(syslog.LOG_DEBUG, "extrasensors: found humidity value of %s %%" % humidity)
+            event.packet['inHumidity'] = float(humidity)
         if temperature is not None:
             syslog.syslog(syslog.LOG_DEBUG, "extrasensors: found temperature value of %s C" % temperature)
-            event.record['inTemp'] = float(temperature * 9.0/5.0 + 32)
+            # NOTE: stores as celsius
+            event.packet['inTemp'] = float(temperature)
