@@ -8,7 +8,7 @@ This works really well if combined with the `weewx-sdr` project, as you will be 
 
 1. Raspberry PI
 1. Weewx installed and working
-1. A DHT22 connected to GPIO, preferably pin 22 (If connected differently, this can be changed in the code)
+1. A DHT22 connected to GPIO, preferably pin 22 (If connected differently, this can be changed in weewx.conf)
 1. A BMP180 connected to GPIO, usually the SDA/SCL pins
 1. Adafruit_Python_DHT installed and working (see https://github.com/adafruit/Adafruit_Python_DHT)
 1. Adafruit_Python_BMP installed and working (see https://github.com/adafruit/Adafruit_Python_BMP)
