@@ -20,7 +20,7 @@ class ExtraSensorsService(StdService):
         try:
             self.get_bmp180(event)
             self.get_dht22(event)
-        except Exception, e:
+        except Exception as e:
             syslog.syslog(syslog.LOG_ERR, "extrasensors: cannot read value: %s" % e) 
 
     # Get BMP180 data
